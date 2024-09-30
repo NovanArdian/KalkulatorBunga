@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak - Bakso Bang Jhon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffffff, #f0f4f8);
+            padding-top: 80px;
+            color: #333;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        header {
+            background-color: #002244;
+            color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center; /* Center the navbar content */
+            align-items: center;
+            max-width: 1200px;
+            margin: auto;
+            position: relative; /* For positioning the menu icon */
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap; /* Wrap the items if needed */
+            justify-content: center; /* Center items in the navbar */
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+            padding: 10px 25px;
+            border-radius: 30px;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #00509e;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 80, 158, 0.3);
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 1.8em;
+            cursor: pointer;
+            position: absolute; /* Positioned relative to the navbar */
+            right: 20px; /* Position it on the right */
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+                flex-direction: column;
+                gap: 15px;
+                position: absolute;
+                background-color: #002244;
+                width: 100%;
+                top: 60px;
+                left: 0;
+                padding: 20px;
+                z-index: 1000;
+            }
+
+            .navbar-menu.show {
+                display: flex;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+        }
+
+        /* Konten Kontak Kami */
+        .contact-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 60px;
+            flex-wrap: wrap;
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .contact-info {
+            flex: 1;
+            max-width: 500px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .contact-info h2 {
+            font-size: 2.5em;
+            color: #002244;
+            margin-bottom: 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        .contact-info h2 span {
+            color: #ffcc00;
+        }
+
+        .contact-info h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #00509e;
+        }
+
+        .contact-info p {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info p i {
+            color: #00509e;
+            margin-right: 10px;
+        }
+
+        .contact-form {
+            flex: 1;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1.3s ease-out forwards;
+        }
+
+        .contact-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #00509e;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 80, 158, 0.5);
+        }
+
+        .contact-form button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            background-color: #00509e;
+            color: #fff;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .contact-form button:hover {
+            background-color: #00408e;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 64, 142, 0.3);
+        }
+
+        footer {
+            background: linear-gradient(to right, #002244, #00509e);
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            border-top: 2px solid #00509e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer a {
+            color: #cce5ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            justify-content: center; /* Center align icons */
+            margin-top: 10px; /* Add some margin above icons */
+        }
+
+        .social-icons a {
+            color: #cce5ff;
+            text-decoration: none;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #fff;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+    <header>
+        <nav class="navbar">
+            <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+            <div class="navbar-menu" id="navbarMenu">
+                <a href="index.html">Home</a>
+                <a href="tes.html">Layanan</a>
+                <a href="tentang.html">Tentang Kami
+                <a href="kontak.html">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="contact-container">
+        <div class="contact-info">
+            <h2>Kontak <span>Kami</span></h2>
+            <p><i class="fas fa-map-marker-alt"></i> BANK NOVAN ARDIAN, Jalan Raya Pasir Angin Gadog, RT 3 RW 01</p>
+            <p><i class="fas fa-phone"></i> +62 812 **** ***</p>
+            <p><i class="fas fa-envelope"></i> info@banknovan.com</p>
+        </div>
+        <div class="contact-form">
+            <form>
+                <input type="text" placeholder="Nama" required>
+                <input type="email" placeholder="Email" required>
+                <textarea placeholder="Pesan" rows="5" required></textarea>
+                <button type="submit">Kirim Pesan</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Novan Ardian. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Script for loading screen animation
+        window.addEventListener('load', function () {
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.style.display = 'none';
+        });
+
+        // Script for responsive navbar toggle
+        function toggleMenu() {
+            const navbarMenu = document.getElementById('navbarMenu');
+            navbarMenu.classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

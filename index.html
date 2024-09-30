@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Pinjaman Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #003366, #0066cc);
+            color: #333;
+            padding-top: 80px;
+            /* Adjusted for fixed header height */
+            overflow: hidden;
+            /* Hide content during loading */
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        header {
+            background-color: #004080;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 20px;
+            background: #003366;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid #0066cc;
+            position: relative;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            transition: color 0.3s, border-bottom 0.3s;
+            padding-bottom: 5px;
+            position: relative;
+        }
+
+        .navbar a:hover {
+            color: #cce5ff;
+        }
+
+        .navbar a::after {
+            content: '';
+            display: block;
+            height: 3px;
+            background: #cce5ff;
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            transition: width 0.3s;
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
+        }
+
+        .sponsor-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #002244;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .sponsor-logos img {
+            height: 40px;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .sponsor-logos img:hover {
+            transform: scale(1.1);
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            /* Allow wrapping for smaller screens */
+        }
+
+        main {
+            padding: 20px 0;
+            width: 100%;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.15);
+            /* More transparent background */
+            padding: 30px;
+            /* Increased padding */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            margin-right: 20px;
+            backdrop-filter: blur(10px);
+            /* Added blur effect for modern look */
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-section h2 {
+            margin-bottom: 15px;
+            color: #cce5ff;
+            /* Updated color for contrast */
+            font-size: 1.8em;
+            /* Adjusted font size */
+            font-weight: bold;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            /* Adjusted margin */
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #cce5ff;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #0066cc;
+            font-size: 0.9em;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #cce5ff;
+            outline: none;
+            box-shadow: 0 0 10px rgba(204, 229, 255, 0.7);
+        }
+
+        button {
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #004080;
+            transform: scale(1.05);
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e6f7ff;
+            border-radius: 10px;
+            border: 1px solid #003366;
+            font-size: 1em;
+            font-weight: bold;
+            color: #003366;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .description {
+            max-width: 600px;
+            padding: 30px;
+            background: linear-gradient(145deg, #004080, #002244);
+            color: #fff;
+            line-height: 1.8;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            font-size: 1em;
+            margin-top: 75px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .description h2 {
+            color: #cce5ff;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background-color: #003366;
+            color: #fff;
+            text-align: center;
+            padding: 30px 0;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+            }
+
+            .form-section {
+                margin-right: 0;
+                margin-bottom: 20px;
+                max-width: 100%;
+            }
+
+            .description {
+                max-width: 100%;
+                margin-top: 0;
+                text-align: center;
+            }
+
+            .description h2 {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+
+    <header>
+        <nav class="navbar">
+            <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+            <a href="tes.html"><i class="fas fa-cogs"></i> Layanan</a>
+            <a href="tentang.html"><i class="fas fa-info-circle"></i> Tentang Kami</a>
+            <a href="kontak.html"><i class="fas fa-envelope"></i> Kontak</a>
+        </nav>
+        <div class="sponsor-logos">
+            <img src="images/png-clipart-logo-bank-mandiri-credit-card-bank-text-logo-removebg-preview.png" alt="Sponsor 1">
+            <img src="images/Logo-Bank-BRI-removebg-preview.png" alt="Sponsor 2">
+            <img src="images/Logo-Bank-BNI-PNG-removebg-preview.png" alt="Sponsor 3">
+        </div>
+    </header>
+    <br>
+    <br>
+
+    <main>
+        <div class="container">
+            <div class="form-section">
+                <h2>Kalkulator <span style="color: rgb(248, 188, 7);">Pinjaman</span></h2>
+                <form id="loanCalculator">
+                    <div class="input-group">
+                        <label for="principal">Jumlah Pinjaman:</label>
+                        <input type="number" id="principal" min="0" step="0.01" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="interestType">Jenis Bunga:</label>
+                        <select id="interestType" required>
+                            <option value="" disabled selected>Pilih Jenis Bunga</option>
+                            <option value="simple">Bunga Tunggal</option>
+                            <option value="compound">Bunga Majemuk</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="durationType">Tipe Durasi:</label>
+                        <select id="durationType" required>
+                            <option value="" disabled selected>Pilih Durasi</option>
+                            <option value="annual">Tahunan</option>
+                            <option value="quarterly">Triwulan</option>
+                            <option value="four-monthly">Caturwulan</option>
+                            <option value="semi-annual">Semester</option>
+                        </select>
+                    </div>
+                    <div class="input-group hidden" id="rateGroup">
+                        <label for="rate">Suku Bunga (% per periode):</label>
+                        <input type="number" id="rate" min="0" step="0.01" required>
+                    </div>
+                    <div class="input-group hidden" id="yearsGroup">
+                        <label for="years">Durasi Pinjaman (jumlah periode):</label>
+                        <input type="number" id="years" min="1" required>
+                    </div>
+                    <button type="submit" id="calculateBtn">Hitung Bunga</button>
+                </form>
+                <div class="result" id="result"></div>
+            </div>
+
+            <section class="description">
+                <h2>Mengapa Memilih Bank <span style="color: rgb(255, 208, 0);">Novan?</span></h2>
+                <p>Kami menawarkan berbagai produk pinjaman dengan bunga kompetitif dan layanan pelanggan terbaik di
+                    kelasnya. Kami berkomitmen untuk membantu Anda mencapai tujuan finansial Anda dengan mudah dan
+                    nyaman.</p>
+                <p>Gunakan kalkulator pinjaman kami untuk menghitung perkiraan biaya pinjaman Anda dan pelajari lebih
+                    lanjut tentang produk-produk kami yang dirancang khusus untuk memenuhi kebutuhan Anda.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2024 Novan Ardian. Semua Hak Dilindungi.
+    </footer>
+
+    <script>
+        window.onload = function () {
+            setTimeout(function () {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.body.style.overflow = "auto"; // Re-enable scrolling
+            }, 4000);
+        };
+
+        document.getElementById('durationType').addEventListener('change', function () {
+            document.getElementById('rateGroup').classList.remove('hidden');
+            document.getElementById('yearsGroup').classList.remove('hidden');
+        });
+
+        document.getElementById('loanCalculator').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            let principal = parseFloat(document.getElementById('principal').value);
+            let rate = parseFloat(document.getElementById('rate').value) / 100;
+            let periods = parseFloat(document.getElementById('years').value);
+            let interestType = document.getElementById('interestType').value;
+            let durationType = document.getElementById('durationType').value;
+
+            // Convert periods based on duration type
+            switch (durationType) {
+                case 'quarterly':
+                    periods = periods / 4;
+                    break;
+                case 'four-monthly':
+                    periods = periods / 3;
+                    break;
+                case 'semi-annual':
+                    periods = periods / 2;
+                    break;
+                default:
+                    break;
+            }
+
+            let interest, totalPayment;
+            if (interestType === 'simple') {
+                interest = principal * rate * periods;
+                totalPayment = principal + interest;
+            } else {
+                totalPayment = principal * Math.pow((1 + rate), periods);
+                interest = totalPayment - principal;
+            }
+
+            const formatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 2,
+            });
+
+            document.getElementById('result').innerHTML = `Bunga: ${formatter.format(interest)}<br>Total Pembayaran: ${formatter.format(totalPayment)}`;
+        });
+    </script>
+
+</body>
+
+</html>
